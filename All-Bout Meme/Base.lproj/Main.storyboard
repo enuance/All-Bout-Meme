@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="bL2-Kl-RVf">
-    <device id="retina4_7" orientation="portrait">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ZiY-lg-4h8">
+    <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -18,28 +18,28 @@
                         <viewControllerLayoutGuide type="bottom" id="IAg-Q7-yhL"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="juc-V4-gzc">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view clipsSubviews="YES" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="XdW-hc-CTu" customClass="UIImageView">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
+                                <rect key="frame" x="0.0" y="64" width="414" height="628"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="TOP" textAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="da3-v4-TOY" userLabel="TopEntry">
-                                        <rect key="frame" x="20" y="30" width="335" height="48"/>
+                                        <rect key="frame" x="20" y="30" width="374" height="48"/>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBlack" family="Helvetica Neue" pointSize="40"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" autocorrectionType="no" returnKeyType="done"/>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="BOTTOM" textAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="kfU-00-9TS" userLabel="BottomEntry">
-                                        <rect key="frame" x="20" y="545" width="335" height="48"/>
+                                        <rect key="frame" x="20" y="550" width="374" height="48"/>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBlack" family="Helvetica Neue" pointSize="40"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" autocorrectionType="no" returnKeyType="done"/>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select a photo to be all bout Meme!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Bd-KS-pfu">
-                                        <rect key="frame" x="87" y="226" width="200" height="171"/>
+                                        <rect key="frame" x="87" y="228.66666666666669" width="239" height="171"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="171" id="8KY-q7-dDn"/>
                                         </constraints>
@@ -64,7 +64,7 @@
                                 </constraints>
                             </view>
                             <toolbar clearsContextBeforeDrawing="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" barStyle="black" translatesAutoresizingMaskIntoConstraints="NO" id="yPs-f7-ejB">
-                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="692" width="414" height="44"/>
                                 <color key="backgroundColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                 <items>
                                     <barButtonItem tag="1" title="Photos" id="cef-3Q-Khm" userLabel="Photos Button">
@@ -78,12 +78,6 @@
                                             <action selector="pickAnImage:" destination="bL2-Kl-RVf" id="GtQ-UN-8wL"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="0zj-i2-aVg"/>
-                                    <barButtonItem tag="3" systemItem="action" id="80c-eI-Mkk" userLabel="Share Button">
-                                        <connections>
-                                            <action selector="share:" destination="bL2-Kl-RVf" id="ar3-ne-bF4"/>
-                                        </connections>
-                                    </barButtonItem>
                                 </items>
                                 <color key="tintColor" red="1" green="0.66666666669999997" blue="0.25490196079999999" alpha="1" colorSpace="calibratedRGB"/>
                             </toolbar>
@@ -91,14 +85,22 @@
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="yPs-f7-ejB" firstAttribute="bottom" secondItem="IAg-Q7-yhL" secondAttribute="top" id="52i-8X-cV4"/>
-                            <constraint firstItem="XdW-hc-CTu" firstAttribute="top" secondItem="juc-V4-gzc" secondAttribute="top" id="Liy-7n-BrT"/>
                             <constraint firstItem="yPs-f7-ejB" firstAttribute="trailing" secondItem="XdW-hc-CTu" secondAttribute="trailing" id="ZfF-kg-vxL"/>
                             <constraint firstItem="yPs-f7-ejB" firstAttribute="top" secondItem="XdW-hc-CTu" secondAttribute="bottom" id="a0K-he-P0b"/>
+                            <constraint firstItem="XdW-hc-CTu" firstAttribute="top" secondItem="pWg-cR-LEv" secondAttribute="bottom" id="egJ-ys-7Cy"/>
                             <constraint firstItem="yPs-f7-ejB" firstAttribute="leading" secondItem="juc-V4-gzc" secondAttribute="leading" id="ekh-0T-bps"/>
                             <constraint firstAttribute="trailing" secondItem="yPs-f7-ejB" secondAttribute="trailing" id="hZa-Xz-HFx"/>
                             <constraint firstItem="yPs-f7-ejB" firstAttribute="leading" secondItem="XdW-hc-CTu" secondAttribute="leading" id="x89-0c-1B5"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="t7o-0B-mXo">
+                        <barButtonItem key="leftBarButtonItem" tag="3" systemItem="action" id="80c-eI-Mkk" userLabel="Share Button">
+                            <color key="tintColor" red="1" green="0.66666666669999997" blue="0.25490196079999999" alpha="1" colorSpace="calibratedRGB"/>
+                            <connections>
+                                <action selector="share:" destination="bL2-Kl-RVf" id="ar3-ne-bF4"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="bottomEntry" destination="kfU-00-9TS" id="eYQ-wK-qMa"/>
                         <outlet property="cameraButton" destination="Fd7-6q-Jod" id="b13-lm-Xd7"/>
@@ -110,6 +112,25 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9qW-n8-kYH" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1268" y="138.98050974512745"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Dgj-JJ-u4j">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="ZiY-lg-4h8" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="soN-bh-yGk">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="bL2-Kl-RVf" kind="relationship" relationship="rootViewController" id="iVu-ap-wYM"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nXf-eI-XNz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="328.80000000000001" y="138.98050974512745"/>
         </scene>

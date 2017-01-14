@@ -8,12 +8,12 @@
 
 import UIKit
 
-// The meme object to be called when saving a meme
+// The meme object to be instantiated when saving a meme.
 class Meme {
-    let upperEntry: String
-    let lowerEntry: String
-    let originalImage: UIImage
-    let memeImage: UIImage
+    private let upperEntry: String
+    private let lowerEntry: String
+    private let originalImage: UIImage
+    private let memeImage: UIImage
     
     init(upperEntry: String, lowerEntry: String, originalImage: UIImage, memeImage: UIImage) {
         self.upperEntry = upperEntry
@@ -28,6 +28,6 @@ class SentMemes{
     var memesList = [Meme]()
     static let shared = SentMemes()
     private init(){}
-    
-    class func clearMatches(){SentMemes.shared.memesList = [Meme]()}
+    class func clearMemes(){SentMemes.shared.memesList = [Meme]()}
+    //Possible idea for clearing out sent memes if needed.
 }
