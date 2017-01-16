@@ -100,10 +100,17 @@
                                 <action selector="share:" destination="bL2-Kl-RVf" id="ar3-ne-bF4"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="cancel" id="d1F-Hu-Asm">
+                            <color key="tintColor" red="1" green="0.66666666669999997" blue="0.25490196079999999" alpha="1" colorSpace="calibratedRGB"/>
+                            <connections>
+                                <action selector="cancelEditing:" destination="bL2-Kl-RVf" id="G78-dN-3o7"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="bottomEntry" destination="kfU-00-9TS" id="eYQ-wK-qMa"/>
                         <outlet property="cameraButton" destination="Fd7-6q-Jod" id="b13-lm-Xd7"/>
+                        <outlet property="cancelButton" destination="d1F-Hu-Asm" id="N3f-NN-vFt"/>
                         <outlet property="introMessage" destination="3Bd-KS-pfu" id="JRw-1Y-abM"/>
                         <outlet property="memePicture" destination="XdW-hc-CTu" id="PGv-9T-AVS"/>
                         <outlet property="pickImageButton" destination="cef-3Q-Khm" id="S6Q-23-qP2"/>

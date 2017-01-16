@@ -9,7 +9,7 @@
 import UIKit
 
 // The meme object to be instantiated when saving a meme.
-class Meme {
+struct Meme {
     private let upperEntry: String
     private let lowerEntry: String
     private let originalImage: UIImage
