@@ -19,10 +19,9 @@ class MemeController: UIViewController,UIImagePickerControllerDelegate, UINaviga
     @IBOutlet weak var introMessage: UILabel!
     @IBOutlet weak var cancelButton: UIBarButtonItem!
     
-    
+    //Setting the Meme Style Fonts for text fields.......................................
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Setting the Meme Style Fonts for text fields.
         let myTextStyle: [String: Any] = [NSStrokeColorAttributeName : UIColor.black,
                                           NSForegroundColorAttributeName : UIColor.white,
                                           NSFontAttributeName : UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!,
@@ -36,36 +35,34 @@ class MemeController: UIViewController,UIImagePickerControllerDelegate, UINaviga
         //May need to add nav delegate here for future implementation of pushed VC's
     }
     
+    //Set Default States for buttons and intro text.......................................
     override func viewWillAppear(_ animated: Bool) {
-        cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
-        shareButton.isEnabled = (memePicture == nil)
         subscribeToKeyboardNotifications()
-        cancelButton.isEnabled = false
+        cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
+        shareButton.isEnabled = (memePicture.image != nil)
+        if shareButton.isEnabled {introMessage.alpha = CGFloat(0)}else{introMessage.alpha = CGFloat(1)}
+        if topEntry.text! != "TOP" || bottomEntry.text! != "BOTTOM" || memePicture.image != nil {
+            cancelButton.isEnabled = true
+        }else{
+            cancelButton.isEnabled = false
+        }
     }
     
+    //Navigation Items Functionality........................................................
     @IBAction func share(_ sender: Any) {
         //Create a meme and hand it to the Activity Controller for sharing.
         let currentMeme = produceMeme()
         let sharingController = UIActivityViewController(activityItems: [currentMeme], applicationActivities: nil)
-        //Submits meme to be saved to the Singleton instance via closure
-        //Saving here doesn't capture exception of Cancel being pressed. May need to be edited later!
+        //Submits meme to be saved to the Singleton instance via custom completion handler
+        //that checks the exception for a user selecting cancel
         sharingController.completionWithItemsHandler = {activity, success, items, error in
-            if !success{ //............This custom completion handler works perfectly!!!!
-                print("cancelled") //.........Go through and clean up appearance of code!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                return//..........Remove print lines!!!!!!!!
-            }else{
-                print("Not Cancelled")
-                self.saveMeme(memedImage: currentMeme)
-                print("The memes list count is \(SentMemes.shared.memesList.count) in custom comp handler")
-                return //Don't know if a return statement is needed or not?
-            }
+            if !success{return} else {self.saveMeme(memedImage: currentMeme) ; return}
         }
-        present(sharingController, animated: true){/*self.saveMeme(memedImage: currentMeme);*/ print("The memes list count is \(SentMemes.shared.memesList.count) in comp handler")}
-        print("The memes list count is \(SentMemes.shared.memesList.count) after the present method")
+        present(sharingController, animated: true)
     }
     
     @IBAction func cancelEditing(_ sender: Any) {
-        //Set Meme to default values
+        //Set Meme back to default values
         topEntry.text = "TOP"
         bottomEntry.text = "BOTTOM"
         introMessage.alpha = CGFloat(1)
@@ -74,9 +71,8 @@ class MemeController: UIViewController,UIImagePickerControllerDelegate, UINaviga
         shareButton.isEnabled = false
     }
     
-    
+    //Meme image creation and Saving.......................................................
     func produceMeme()-> UIImage{
-        //Create an image based on anything that is visable within the bounds of memePicture.
         //Used ContextWithOptions for better photo resolution.
         UIGraphicsBeginImageContextWithOptions(memePicture.bounds.size, true, 0.0)
         memePicture.drawHierarchy(in: memePicture.bounds, afterScreenUpdates: true)
@@ -87,12 +83,12 @@ class MemeController: UIViewController,UIImagePickerControllerDelegate, UINaviga
     
     func saveMeme(memedImage: UIImage){
         let meme = Meme(upperEntry: topEntry.text! , lowerEntry: bottomEntry.text! , originalImage: memePicture.image! , memeImage: memedImage)
-        //Send instance of meme to sengleton object property memesList
+        //Send instance of meme to singleton object property memesList
         SentMemes.shared.memesList.append(meme)
     }
     
     
-    //Image delegation and selection section..............................................
+    //Image delegation and selection section...............................................
     @IBAction func pickAnImage(_ sender: UIBarButtonItem) {
         let pickerOfImage = UIImagePickerController()
         pickerOfImage.delegate = self
@@ -112,15 +108,9 @@ class MemeController: UIViewController,UIImagePickerControllerDelegate, UINaviga
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         self.memePicture.image = info[UIImagePickerControllerOriginalImage] as! UIImage?
         dismiss(animated: true){self.shareButton.isEnabled = true; self.cancelButton.isEnabled = true}
-        //Share enabling may need to be moved from closure, contingent on future behavior of app.
     }
     
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        //enter code for checking that the meme image has previously been selected or not and then ensure that the cancel and share buttons are enabled based upon that data. Currently there's an exception with selecting an image and then going back to reselect another image but cancelling before making a selection that disables the two mentioned buttons.
-    }
-    
-    
-    //Text field delegation..............................................................
+    //Text field delegation...............................................................
     func textFieldDidBeginEditing(_ textField: UITextField) {
         //Clear out text field upon editing if used for the first time.
         if textField.text! == "TOP" || textField.text! == "BOTTOM"{textField.text = ""}
@@ -132,7 +122,7 @@ class MemeController: UIViewController,UIImagePickerControllerDelegate, UINaviga
         return true
     }
     
-    //Keyboard Notifications..............................................................
+    //Keyboard Notifications...............................................................
     func keyboardWillShow(_ notification: Notification){
         //Only move Main View with Keyboard if the bottom text field is in use!
         if bottomEntry.isEditing{

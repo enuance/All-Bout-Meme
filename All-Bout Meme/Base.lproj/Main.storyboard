@@ -49,6 +49,7 @@
                                     </label>
                                 </subviews>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstItem="kfU-00-9TS" firstAttribute="leading" secondItem="XdW-hc-CTu" secondAttribute="leading" constant="20" id="2TU-2I-HXM"/>
                                     <constraint firstAttribute="trailing" secondItem="da3-v4-TOY" secondAttribute="trailing" constant="20" id="6R5-Qa-Fgh"/>
