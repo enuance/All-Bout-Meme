@@ -13,6 +13,7 @@
 		20009B451E29C21100BBAF8F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20009B431E29C21100BBAF8F /* LaunchScreen.storyboard */; };
 		20009B4D1E29C25800BBAF8F /* MemeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20009B4C1E29C25800BBAF8F /* MemeController.swift */; };
 		20009B4F1E29C30600BBAF8F /* MemeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20009B4E1E29C30600BBAF8F /* MemeModel.swift */; };
+		2006A3D51E2F2284009A8BB8 /* MemeStylesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2006A3D41E2F2284009A8BB8 /* MemeStylesController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		20009B461E29C21100BBAF8F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		20009B4C1E29C25800BBAF8F /* MemeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemeController.swift; sourceTree = "<group>"; };
 		20009B4E1E29C30600BBAF8F /* MemeModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MemeModel.swift; path = ../MemeModel.swift; sourceTree = "<group>"; };
+		2006A3D41E2F2284009A8BB8 /* MemeStylesController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemeStylesController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 				20009B3A1E29C21100BBAF8F /* AppDelegate.swift */,
 				20009B4E1E29C30600BBAF8F /* MemeModel.swift */,
 				20009B4C1E29C25800BBAF8F /* MemeController.swift */,
+				2006A3D41E2F2284009A8BB8 /* MemeStylesController.swift */,
 				20009B3E1E29C21100BBAF8F /* Main.storyboard */,
 				20009B411E29C21100BBAF8F /* Assets.xcassets */,
 				20009B431E29C21100BBAF8F /* LaunchScreen.storyboard */,
@@ -141,6 +144,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				20009B4D1E29C25800BBAF8F /* MemeController.swift in Sources */,
+				2006A3D51E2F2284009A8BB8 /* MemeStylesController.swift in Sources */,
 				20009B4F1E29C30600BBAF8F /* MemeModel.swift in Sources */,
 				20009B3B1E29C21100BBAF8F /* AppDelegate.swift in Sources */,
 			);

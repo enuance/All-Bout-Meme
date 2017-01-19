@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MemeController: UIViewController,UIImagePickerControllerDelegate, UINavigationControllerDelegate , UITextFieldDelegate{
+class MemeController: UIViewController,UIImagePickerControllerDelegate, UINavigationControllerDelegate , UITextFieldDelegate,  StyleSelectionDelegate{
     
     @IBOutlet weak var memePicture: UIImageView!
     @IBOutlet weak var pickImageButton: UIBarButtonItem!
@@ -18,21 +18,27 @@ class MemeController: UIViewController,UIImagePickerControllerDelegate, UINaviga
     @IBOutlet weak var bottomEntry: UITextField!
     @IBOutlet weak var introMessage: UILabel!
     @IBOutlet weak var cancelButton: UIBarButtonItem!
+
+    let allBoutMeme = MemeStyle()
+    
+    func forEntries(setStyle: Styles){
+        let styleToBeSet = allBoutMeme.configure(topEntry, bottomEntry, setStyle)
+        topEntry = styleToBeSet.first
+        bottomEntry = styleToBeSet.second
+    }
+    
+    //Implementation of custom style selection delegate.
+    func didSelectStyle(_ styleSelected: Styles) {
+        forEntries(setStyle: styleSelected)
+    }
     
     //Setting the Meme Style Fonts for text fields.......................................
     override func viewDidLoad() {
         super.viewDidLoad()
-        let myTextStyle: [String: Any] = [NSStrokeColorAttributeName : UIColor.black,
-                                          NSForegroundColorAttributeName : UIColor.white,
-                                          NSFontAttributeName : UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!,
-                                          NSStrokeWidthAttributeName: -0.9]
-        topEntry.defaultTextAttributes = myTextStyle
-        bottomEntry.defaultTextAttributes = myTextStyle
-        topEntry.textAlignment = .center
-        bottomEntry.textAlignment = .center
+        forEntries(setStyle: .Meme)
         topEntry.delegate = self
         bottomEntry.delegate = self
-        //May need to add nav delegate here for future implementation of pushed VC's
+        navigationController?.delegate = self
     }
     
     //Set Default States for buttons and intro text.......................................
@@ -41,7 +47,7 @@ class MemeController: UIViewController,UIImagePickerControllerDelegate, UINaviga
         cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
         shareButton.isEnabled = (memePicture.image != nil)
         if shareButton.isEnabled {introMessage.alpha = CGFloat(0)}else{introMessage.alpha = CGFloat(1)}
-        if topEntry.text! != "TOP" || bottomEntry.text! != "BOTTOM" || memePicture.image != nil {
+        if topEntry.text! != "TOP" || bottomEntry.text! != "BOTTOM" || memePicture.image != nil || topEntry.font! != UIFont(name: "HelveticaNeue-CondensedBlack", size: 40){
             cancelButton.isEnabled = true
         }else{
             cancelButton.isEnabled = false
@@ -65,6 +71,7 @@ class MemeController: UIViewController,UIImagePickerControllerDelegate, UINaviga
         //Set Meme back to default values
         topEntry.text = "TOP"
         bottomEntry.text = "BOTTOM"
+        forEntries(setStyle: .Meme)
         introMessage.alpha = CGFloat(1)
         memePicture.image = nil
         cancelButton.isEnabled = false
@@ -110,6 +117,16 @@ class MemeController: UIViewController,UIImagePickerControllerDelegate, UINaviga
         dismiss(animated: true){self.shareButton.isEnabled = true; self.cancelButton.isEnabled = true}
     }
     
+    //Selection of Meme Styles...................................................
+    @IBAction func memeStyleSelector(_ sender: UIBarButtonItem) {
+        //Setting up for push to TableView
+        let storyboard = UIStoryboard (name: "Main", bundle: nil)
+        let memeStylesVC = storyboard.instantiateViewController(withIdentifier: "StylesController")as! MemeStylesController
+        //Setting the custom delegate for passing data about Styles.
+        memeStylesVC.delegate = self
+        navigationController!.pushViewController(memeStylesVC, animated: true)
+    }
+    
     //Text field delegation...............................................................
     func textFieldDidBeginEditing(_ textField: UITextField) {
         //Clear out text field upon editing if used for the first time.
@@ -131,12 +148,14 @@ class MemeController: UIViewController,UIImagePickerControllerDelegate, UINaviga
             }
         }
     }
+    
     func keyboardWillHide(notification: NSNotification) {
         //Put the Main View back in it's place when keyboard hides.
         if self.view.frame.origin.y != 0{
             self.view.frame.origin.y = 0
         }
     }
+    
     func subscribeToKeyboardNotifications(){
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
