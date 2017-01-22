@@ -14,8 +14,9 @@ struct Meme {
     let lowerEntry: String
     let originalImage: UIImage
     let memeImage: UIImage
+    let memeStyle: Styles
 }
-    
+
 //Singleton Object for sharing model across MVC's.
 class SentMemes{
     var memesList = [Meme]()
@@ -27,7 +28,7 @@ class SentMemes{
 
 enum Styles: Int{ case Meme, Schooled, Industrial, Typewriter, Notes, Handwritten, LoveLetter}
 
-enum SampleSize: Int{case Big, Small}
+enum SampleSize: Int{case Big, Small, Cell}
 
 struct MemeStyle{
     
@@ -97,42 +98,63 @@ struct MemeStyle{
         case (.Meme, .Small):
             font = "HelveticaNeue-CondensedBlack"
             fontSize = 18
+        case (.Meme, .Cell):
+            font = "HelveticaNeue-CondensedBlack"
+            fontSize = 12
         case (.Schooled, .Big):
             font = "Chalkduster"
             fontSize = 30
         case (.Schooled, .Small):
             font = "Chalkduster"
             fontSize = 18
+        case (.Schooled, .Cell):
+            font = "Chalkduster"
+            fontSize = 12
         case (.Industrial, .Big):
             font = "Copperplate-Bold"
             fontSize = 30
         case (.Industrial, .Small):
             font = "Copperplate-Bold"
             fontSize = 18
+        case (.Industrial, .Cell):
+            font = "Copperplate-Bold"
+            fontSize = 12
         case (.Typewriter, .Big):
             font = "AmericanTypewriter"
             fontSize = 30
         case (.Typewriter, .Small):
             font = "AmericanTypewriter"
             fontSize = 18
+        case (.Typewriter, .Cell):
+            font = "AmericanTypewriter"
+            fontSize = 12
         case (.Notes, .Big):
             font = "Noteworthy-Bold"
             fontSize = 30
         case (.Notes, .Small):
             font = "Noteworthy-Bold"
             fontSize = 18
+        case (.Notes, .Cell):
+            font = "Noteworthy-Bold"
+            fontSize = 12
         case (.Handwritten, .Big):
             font = "BradleyHandITCTT-Bold"
             fontSize = 30
         case (.Handwritten, .Small):
             font = "BradleyHandITCTT-Bold"
             fontSize = 18
+        case (.Handwritten, .Cell):
+            font = "BradleyHandITCTT-Bold"
+            fontSize = 12
         case (.LoveLetter, .Big):
             font = "SnellRoundhand-Black"
             fontSize = 30
         case (.LoveLetter, .Small):
             font = "SnellRoundhand-Black"
             fontSize = 18
+        case (.LoveLetter, .Cell):
+            font = "SnellRoundhand-Black"
+            fontSize = 12
         }
         let configuredFont = UIFont(name: font, size: fontSize)
         return configuredFont!

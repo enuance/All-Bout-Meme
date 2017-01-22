@@ -18,21 +18,23 @@ class MemeController: UIViewController,UIImagePickerControllerDelegate, UINaviga
     @IBOutlet weak var bottomEntry: UITextField!
     @IBOutlet weak var introMessage: UILabel!
     @IBOutlet weak var cancelButton: UIBarButtonItem!
-
+    var memeStyleUsed: Styles!
     let allBoutMeme = MemeStyle()
     
-    func forEntries(setStyle: Styles){
-        let styleToBeSet = allBoutMeme.configure(topEntry, bottomEntry, setStyle)
-        topEntry = styleToBeSet.first
-        bottomEntry = styleToBeSet.second
-    }
-    
-    //Implementation of custom style selection delegate.
+    //Initial - Default Style Set up and Delegation section...............................
     func didSelectStyle(_ styleSelected: Styles) {
         forEntries(setStyle: styleSelected)
     }
     
-    //Setting the Meme Style Fonts for text fields.......................................
+    //Helper Method to set styles and the style used flag property
+    func forEntries(setStyle: Styles){
+        let styleToBeSet = allBoutMeme.configure(topEntry, bottomEntry, setStyle)
+        topEntry = styleToBeSet.first
+        bottomEntry = styleToBeSet.second
+        memeStyleUsed = setStyle
+    }
+    
+    //Delegate Set-up and Initial Values
     override func viewDidLoad() {
         super.viewDidLoad()
         forEntries(setStyle: .Meme)
@@ -47,7 +49,7 @@ class MemeController: UIViewController,UIImagePickerControllerDelegate, UINaviga
         cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
         shareButton.isEnabled = (memePicture.image != nil)
         if shareButton.isEnabled {introMessage.alpha = CGFloat(0)}else{introMessage.alpha = CGFloat(1)}
-        if topEntry.text! != "TOP" || bottomEntry.text! != "BOTTOM" || memePicture.image != nil || topEntry.font! != UIFont(name: "HelveticaNeue-CondensedBlack", size: 40){
+        if topEntry.text! != "TOP" || bottomEntry.text! != "BOTTOM" || memePicture.image != nil || memeStyleUsed != .Meme/*topEntry.font! != UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)*/{
             cancelButton.isEnabled = true
         }else{
             cancelButton.isEnabled = false
@@ -62,7 +64,14 @@ class MemeController: UIViewController,UIImagePickerControllerDelegate, UINaviga
         //Submits meme to be saved to the Singleton instance via custom completion handler
         //that checks the exception for a user selecting cancel
         sharingController.completionWithItemsHandler = {activity, success, items, error in
-            if !success{return} else {self.saveMeme(memedImage: currentMeme) ; return}
+            if !success{
+                return
+            } else {
+                self.saveMeme(memedImage: currentMeme)
+                self.tabBarController?.tabBar.isHidden = false
+                self.navigationController!.popToRootViewController(animated: true)
+                return
+            }
         }
         present(sharingController, animated: true)
     }
@@ -76,6 +85,8 @@ class MemeController: UIViewController,UIImagePickerControllerDelegate, UINaviga
         memePicture.image = nil
         cancelButton.isEnabled = false
         shareButton.isEnabled = false
+        tabBarController?.tabBar.isHidden = false//!!
+        navigationController!.popToRootViewController(animated: true)//!!
     }
     
     //Meme image creation and Saving.......................................................
@@ -89,7 +100,7 @@ class MemeController: UIViewController,UIImagePickerControllerDelegate, UINaviga
     }
     
     func saveMeme(memedImage: UIImage){
-        let meme = Meme(upperEntry: topEntry.text! , lowerEntry: bottomEntry.text! , originalImage: memePicture.image! , memeImage: memedImage)
+        let meme = Meme(upperEntry: topEntry.text! , lowerEntry: bottomEntry.text! , originalImage: memePicture.image! , memeImage: memedImage, memeStyle: memeStyleUsed)
         //Send instance of meme to singleton object property memesList
         SentMemes.shared.memesList.append(meme)
     }
@@ -161,4 +172,3 @@ class MemeController: UIViewController,UIImagePickerControllerDelegate, UINaviga
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
 }
-
