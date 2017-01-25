@@ -8,7 +8,7 @@
 
 import UIKit
 
-// The meme object to be instantiated when saving a meme.
+//The meme object to be instantiated when saving a meme.........................................................
 struct Meme {
     let upperEntry: String
     let lowerEntry: String
@@ -17,34 +17,39 @@ struct Meme {
     let memeStyle: Styles
 }
 
-//Singleton Object for sharing model across MVC's.
+//Singleton Object for sharing model globally across MVC's......................................................
 class SentMemes{
     var memesList = [Meme]()
     static let shared = SentMemes()
     private init(){}
-    class func clearMemes(){SentMemes.shared.memesList = [Meme]()}
     //Possible idea for clearing out sent memes if needed.
+    class func clearMemes(){SentMemes.shared.memesList = [Meme]()}
 }
 
+//Helper enums to act as flags within configuration Methods.....................................................
 enum Styles: Int{ case Meme, Schooled, Industrial, Typewriter, Notes, Handwritten, LoveLetter}
-
 enum SampleSize: Int{case Big, Small, Cell}
 
+//Delegate declaration for passing style info through Navagation-Stack..........................................
+protocol StyleSelectionDelegate: class{func didSelectStyle(_ styleSelected: Styles)}
+
+//Struct to contain text configurations methods to be used throughout the application...........................
 struct MemeStyle{
+    //Menu of style options available to format your TextFields with
+    let menu: [(styleType: Styles, displayName: String, description: String)] =
+        [(.Meme,"Meme", "The original look, style, and feel of Meme"),
+        (.Schooled,"Schooled", "Reminiscent of \"I will not...\" 100x's on the chalkboard"),
+        (.Industrial,"Industrial","Cold hard stamped out steel letters"),
+        (.Typewriter,"Typewriter","An old-school report with your Momma's old Typewritter"),
+        (.Notes,"Notes", "A quick jot to keep those thoughts on some scratch paper"),
+        (.Handwritten,"Handwritten", "It's personal and you wanna show it writting it yourself"),
+        (.LoveLetter,"Love Letter", "Dust off that caligraphy pen and let the ink flow for your heart-throb")]
     
-    let menu: [(styleType: Styles, displayName: String, description: String)] = [(.Meme,"Meme", "The original look, style, and feel of Meme"),
-                                                                                 (.Schooled,"Schooled", "Reminiscent of \"I will not...\" 100x's on the chalboard"),
-                                                                                 (.Industrial,"Industrial","Cold hard stamped out steel letters"),
-                                                                                 (.Typewriter,"Typewriter","An old-school report with your Momma's old Typewritter"),
-                                                                                 (.Notes,"Notes", "A quick jot to keep those thoughts on some scratch paper"),
-                                                                                 (.Handwritten,"Handwritten", "It's personal and you wanna show it writting it yourself"),
-                                                                                 (.LoveLetter,"Love Letter", "Dust off that caligraphy pen and let the ink flow for your heart-throb")]
-    
+    //Method to configure the two Meme Text Fields
     func configure(_ firstEntry: UITextField, _ secondEntry: UITextField, _ selectedStyle: Styles) -> (first: UITextField, second: UITextField){
         var font = "HelveticaNeue-CondensedBlack"
         var fontSize: CGFloat = 40
         var outlineSize = -0.9
-        
         switch selectedStyle{
         case .Meme:
             font = "HelveticaNeue-CondensedBlack"
@@ -75,22 +80,19 @@ struct MemeStyle{
             fontSize = 44
             outlineSize = -0.2
         }
-        
         let myTextStyle: [String: Any] = [NSStrokeColorAttributeName : UIColor.black, NSForegroundColorAttributeName : UIColor.white,
                                           NSFontAttributeName : UIFont(name: font, size: fontSize)!, NSStrokeWidthAttributeName: outlineSize]
-        
         firstEntry.defaultTextAttributes = myTextStyle
         secondEntry.defaultTextAttributes = myTextStyle
         firstEntry.textAlignment = .center
         secondEntry.textAlignment = .center
-        
         return (first: firstEntry, second: secondEntry)
     }
     
+    //Method to configure all other text throughout application.
     func fontForStyle(_ selectedStyle: Styles, size: SampleSize) -> (UIFont){
         var font = "HelveticaNeue-CondensedBlack"
         var fontSize: CGFloat = 24
-        
         switch (selectedStyle, size){
         case (.Meme, .Big):
             font = "HelveticaNeue-CondensedBlack"
@@ -159,11 +161,6 @@ struct MemeStyle{
         let configuredFont = UIFont(name: font, size: fontSize)
         return configuredFont!
     }
-}
-
-//Protocol for passing data backwards through Navagation VC Stack.
-protocol StyleSelectionDelegate: class{
-    func didSelectStyle(_ styleSelected: Styles)
 }
 
 

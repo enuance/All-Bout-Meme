@@ -8,45 +8,32 @@
 
 import UIKit
 
+//Controlls a TableView that shows Meme Styles to choose from.
 class MemeStylesController: UIViewController, UITableViewDelegate, UITableViewDataSource{
-
-    //Use tuples here instead in order to index more accurately through data type.
-
     let styles = MemeStyle()
-    
+    let stylesMenu = MemeStyle().menu
+    //Custom Delegate property
     weak var delegate: StyleSelectionDelegate? = nil
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let stylesMenu = styles.menu
         return stylesMenu.count
     }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let stylesMenu = styles.menu
         let chosenStyle = stylesMenu[indexPath.row].styleType
+        //Passing data backwards through NavigationStack using custom delegate.
         delegate?.didSelectStyle(chosenStyle)
-        //Passing Info Through Our Custom Delegate and backwards through the Navigation Stack.
         navigationController!.popViewController(animated: true)
     }
     
+    //Formating all cells to display the items in our Style Menu
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let theStyleCell = tableView.dequeueReusableCell(withIdentifier: "StyleCell")!
-        
-        let stylesMenu = styles.menu
-        let styleName = stylesMenu[indexPath.row].displayName
-        let styleDescription = stylesMenu[indexPath.row].description
-        let styleType = stylesMenu[indexPath.row].styleType
-        
-        theStyleCell.textLabel?.text = styleName
-        theStyleCell.detailTextLabel?.text = styleDescription
-        theStyleCell.textLabel?.font = styles.fontForStyle(styleType, size: .Big)
-        theStyleCell.detailTextLabel?.font = styles.fontForStyle(styleType, size: .Small)
-        
+        let cellFormat = stylesMenu[indexPath.row]
+        theStyleCell.textLabel?.text = cellFormat.displayName
+        theStyleCell.detailTextLabel?.text = cellFormat.description
+        theStyleCell.textLabel?.font = styles.fontForStyle(cellFormat.styleType, size: .Big)
+        theStyleCell.detailTextLabel?.font = styles.fontForStyle(cellFormat.styleType, size: .Small)
         return theStyleCell
     }
-    
-    
 }

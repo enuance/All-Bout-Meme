@@ -18,23 +18,12 @@ class MemeController: UIViewController,UIImagePickerControllerDelegate, UINaviga
     @IBOutlet weak var bottomEntry: UITextField!
     @IBOutlet weak var introMessage: UILabel!
     @IBOutlet weak var cancelButton: UIBarButtonItem!
+    var textDistanceMoved: CGFloat = 0
     var memeStyleUsed: Styles!
     let allBoutMeme = MemeStyle()
     
-    //Initial - Default Style Set up and Delegation section...............................
-    func didSelectStyle(_ styleSelected: Styles) {
-        forEntries(setStyle: styleSelected)
-    }
-    
-    //Helper Method to set styles and the style used flag property
-    func forEntries(setStyle: Styles){
-        let styleToBeSet = allBoutMeme.configure(topEntry, bottomEntry, setStyle)
-        topEntry = styleToBeSet.first
-        bottomEntry = styleToBeSet.second
-        memeStyleUsed = setStyle
-    }
-    
-    //Delegate Set-up and Initial Values
+    //Initial Set-Up and Delegation Assignement Section.......................................
+    //Delegate assignment and Initial Values
     override func viewDidLoad() {
         super.viewDidLoad()
         forEntries(setStyle: .Meme)
@@ -43,22 +32,43 @@ class MemeController: UIViewController,UIImagePickerControllerDelegate, UINaviga
         navigationController?.delegate = self
     }
     
-    //Set Default States for buttons and intro text.......................................
+    //Set Default States for buttons and intro text
     override func viewWillAppear(_ animated: Bool) {
         subscribeToKeyboardNotifications()
         cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
         shareButton.isEnabled = (memePicture.image != nil)
         if shareButton.isEnabled {introMessage.alpha = CGFloat(0)}else{introMessage.alpha = CGFloat(1)}
-        if topEntry.text! != "TOP" || bottomEntry.text! != "BOTTOM" || memePicture.image != nil || memeStyleUsed != .Meme/*topEntry.font! != UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)*/{
+        if topEntry.text! != "TOP" || bottomEntry.text! != "BOTTOM" || memePicture.image != nil || memeStyleUsed != .Meme{
             cancelButton.isEnabled = true
         }else{
             cancelButton.isEnabled = false
         }
     }
     
-    //Navigation Items Functionality........................................................
+    //Style Selection and Set up section......................................................
+    //Navigate to the Meme Styles Selection TableView
+    @IBAction func memeStyleSelector(_ sender: UIBarButtonItem) {
+        let storyboard = UIStoryboard (name: "Main", bundle: nil)
+        let memeStylesVC = storyboard.instantiateViewController(withIdentifier: "StylesController")as! MemeStylesController
+        //Setting the custom delegate for passing data about Styles.
+        memeStylesVC.delegate = self
+        navigationController!.pushViewController(memeStylesVC, animated: true)
+    }
+    
+    //Implementation of Custom Style delegate to inform Editor of Style Selection
+    func didSelectStyle(_ styleSelected: Styles) {forEntries(setStyle: styleSelected)}
+    
+    //Helper Method to format entry fields to Styles selected
+    func forEntries(setStyle: Styles){
+        let styleToBeSet = allBoutMeme.configure(topEntry, bottomEntry, setStyle)
+        topEntry = styleToBeSet.first
+        bottomEntry = styleToBeSet.second
+        memeStyleUsed = setStyle
+    }
+    
+    //Top Navigation Items Section............................................................
+    //Create a meme and hand it to the Activity Controller for sharing.
     @IBAction func share(_ sender: Any) {
-        //Create a meme and hand it to the Activity Controller for sharing.
         let currentMeme = produceMeme()
         let sharingController = UIActivityViewController(activityItems: [currentMeme], applicationActivities: nil)
         //Submits meme to be saved to the Singleton instance via custom completion handler
@@ -68,7 +78,6 @@ class MemeController: UIViewController,UIImagePickerControllerDelegate, UINaviga
                 return
             } else {
                 self.saveMeme(memedImage: currentMeme)
-                self.tabBarController?.tabBar.isHidden = false
                 self.navigationController!.popToRootViewController(animated: true)
                 return
             }
@@ -76,8 +85,8 @@ class MemeController: UIViewController,UIImagePickerControllerDelegate, UINaviga
         present(sharingController, animated: true)
     }
     
+    //Set Editor back to default values & Navigate to beginning
     @IBAction func cancelEditing(_ sender: Any) {
-        //Set Meme back to default values
         topEntry.text = "TOP"
         bottomEntry.text = "BOTTOM"
         forEntries(setStyle: .Meme)
@@ -85,11 +94,11 @@ class MemeController: UIViewController,UIImagePickerControllerDelegate, UINaviga
         memePicture.image = nil
         cancelButton.isEnabled = false
         shareButton.isEnabled = false
-        tabBarController?.tabBar.isHidden = false//!!
-        navigationController!.popToRootViewController(animated: true)//!!
+        navigationController!.popToRootViewController(animated: true)
     }
     
-    //Meme image creation and Saving.......................................................
+    //Meme image selection and management Section.............................................
+    //Creates a meme image using the context of the memePicture property
     func produceMeme()-> UIImage{
         //Used ContextWithOptions for better photo resolution.
         UIGraphicsBeginImageContextWithOptions(memePicture.bounds.size, true, 0.0)
@@ -99,17 +108,19 @@ class MemeController: UIViewController,UIImagePickerControllerDelegate, UINaviga
         return meme
     }
     
+    //Saves the current meme as a Meme object and stores it in an global array
     func saveMeme(memedImage: UIImage){
         let meme = Meme(upperEntry: topEntry.text! , lowerEntry: bottomEntry.text! , originalImage: memePicture.image! , memeImage: memedImage, memeStyle: memeStyleUsed)
         //Send instance of meme to singleton object property memesList
         SentMemes.shared.memesList.append(meme)
     }
     
-    
-    //Image delegation and selection section...............................................
+    //Select an image to edit in the meme editor using either album or camera
     @IBAction func pickAnImage(_ sender: UIBarButtonItem) {
         let pickerOfImage = UIImagePickerController()
         pickerOfImage.delegate = self
+        //Allows User to crop photo
+        pickerOfImage.allowsEditing = true
         //Presenting appropriate Image picker by identifying the button tag
         switch sender.tag{
         case 1: //Photos Button Tag
@@ -123,48 +134,60 @@ class MemeController: UIViewController,UIImagePickerControllerDelegate, UINaviga
         present(pickerOfImage, animated: true){self.introMessage.alpha = CGFloat(0)}
     }
     
+    //Delegate that informs us of the image selected for editing and updates button states
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        self.memePicture.image = info[UIImagePickerControllerOriginalImage] as! UIImage?
+        memePicture.image = info[UIImagePickerControllerEditedImage] as! UIImage?
         dismiss(animated: true){self.shareButton.isEnabled = true; self.cancelButton.isEnabled = true}
     }
     
-    //Selection of Meme Styles...................................................
-    @IBAction func memeStyleSelector(_ sender: UIBarButtonItem) {
-        //Setting up for push to TableView
-        let storyboard = UIStoryboard (name: "Main", bundle: nil)
-        let memeStylesVC = storyboard.instantiateViewController(withIdentifier: "StylesController")as! MemeStylesController
-        //Setting the custom delegate for passing data about Styles.
-        memeStylesVC.delegate = self
-        navigationController!.pushViewController(memeStylesVC, animated: true)
-    }
-    
-    //Text field delegation...............................................................
+    //TextField Editing Section...............................................................
     func textFieldDidBeginEditing(_ textField: UITextField) {
         //Clear out text field upon editing if used for the first time.
         if textField.text! == "TOP" || textField.text! == "BOTTOM"{textField.text = ""}
         cancelButton.isEnabled = true
     }
     
+    //Hides keyboard after pressing enter
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
     
-    //Keyboard Notifications...............................................................
+    //Moves TextFields into desires position or returns to original location
+    @IBAction func textSpacing(_ sender: Any) {
+        let distance: CGFloat = 40
+        let textPosition = (top: topEntry.frame.origin.y, bottom: bottomEntry.frame.origin.y)
+        let newPositions = (top: (textPosition.top + distance), bottom: (textPosition.bottom - distance))
+        let resetPositions = (top: textPosition.top - textDistanceMoved, bottom: textPosition.bottom + textDistanceMoved)
+        if newPositions.top + distance <= newPositions.bottom{
+            textDistanceMoved += distance
+            topEntry.frame.origin.y = newPositions.top
+            bottomEntry.frame.origin.y = newPositions.bottom
+        }else{
+            topEntry.frame.origin.y = resetPositions.top
+            bottomEntry.frame.origin.y = resetPositions.bottom
+            textDistanceMoved = 0
+        }
+    }
+    
+    //Resets the textField distance tracking property if moved to portrait or landscape
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        textDistanceMoved = 0
+    }
+    
+    //Keyboard Management Section.............................................................
     func keyboardWillShow(_ notification: Notification){
         //Only move Main View with Keyboard if the bottom text field is in use!
         if bottomEntry.isEditing{
             if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue{
-                self.view.frame.origin.y = 0 - keyboardSize.height
+                view.frame.origin.y = 0 - keyboardSize.height
             }
         }
     }
     
+    //Put the Main View back in it's place when keyboard hides.
     func keyboardWillHide(notification: NSNotification) {
-        //Put the Main View back in it's place when keyboard hides.
-        if self.view.frame.origin.y != 0{
-            self.view.frame.origin.y = 0
-        }
+        if view.frame.origin.y != 0 {view.frame.origin.y = 0}
     }
     
     func subscribeToKeyboardNotifications(){

@@ -8,6 +8,7 @@
 
 import UIKit
 
+//Custom-Prototype CollectionCell
 class MemesCollectionCell: UICollectionViewCell {
     @IBOutlet weak var cellImage: UIImageView!
     @IBOutlet weak var topCellEntry: UILabel!
