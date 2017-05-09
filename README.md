@@ -47,4 +47,4 @@ either a list view or as tile view.
 - Completed: Add the ability to remove memes from the persistant data model
 - Possibly add the ability to edit already sent memes and be able to resend new meme.
 
-This app now impliments (as of 5/9/2017) basic Data Persistence using the Core Data frmaework. Sent Memes are saved on the local disc and retrieved using NSFecthRequests. A delete method has also been added that uses an NSPredicate to search for the Meme to delete (using it's unique identifier') in the Data Base.
+This app now impliments (as of 5/9/2017) basic Data Persistence using the Core Data framework. Sent Memes are saved on the local disc and retrieved using NSFecthRequests. A delete method has also been added that uses an NSPredicate to search for the Meme to delete (using it's unique identifier) in the Data Base.
