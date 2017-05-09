@@ -38,6 +38,7 @@ class MemesCollectionViewController: UIViewController, UICollectionViewDelegate,
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
         layoutSetter(checkBeforeTransition: true, size)
     }
     
@@ -46,11 +47,10 @@ class MemesCollectionViewController: UIViewController, UICollectionViewDelegate,
     }
     
     //Sets the initial/default appearance of the CollectionView
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {super.viewWillAppear(animated)
         layoutSetter(checkBeforeTransition: false, nil)
-        if SentMemes.shared.memesList.count != 0 {
-            makeMemeMessage.alpha = 0
-        }
+        SentMemes.loadFromDB()
+        if SentMemes.shared.memesList.count != 0 {makeMemeMessage.alpha = 0}
         //Reloads the CollectionView's data each time it's brought up to Screen.
         memesCollection.reloadData()
         tabBarController?.tabBar.isHidden = false
@@ -62,16 +62,17 @@ class MemesCollectionViewController: UIViewController, UICollectionViewDelegate,
     
     //Formats all the memes to be viewed in the collection.
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let image = SentMemes.shared.memesList[indexPath.row].originalImage
-        let topText = SentMemes.shared.memesList[indexPath.row].upperEntry
-        let bottomText = SentMemes.shared.memesList[indexPath.row].lowerEntry
-        let style = SentMemes.shared.memesList[indexPath.row].memeStyle
+        
+        let image = SentMemes.shared.memesList[indexPath.row].originalImage!
+        let topText = SentMemes.shared.memesList[indexPath.row].upperEntry!
+        let bottomText = SentMemes.shared.memesList[indexPath.row].lowerEntry!
+        let style = SentMemes.shared.memesList[indexPath.row].memeStyle!
         let memeCell = collectionView.dequeueReusableCell(withReuseIdentifier: "MemesCollectionCell", for: indexPath) as! MemesCollectionCell
-        memeCell.cellImage.image = image
+        memeCell.cellImage.image = UIImage(data: image as Data)
         memeCell.topCellEntry.text = topText
-        memeCell.topCellEntry.font = cellDesign.fontForStyle(style, size: .Cell)
+        memeCell.topCellEntry.font = cellDesign.fontForStyle(MemeCnst.styleFor(style), size: .Cell)
         memeCell.bottomCellEntry.text = bottomText
-        memeCell.bottomCellEntry.font = cellDesign.fontForStyle(style, size: .Cell)
+        memeCell.bottomCellEntry.font = cellDesign.fontForStyle(MemeCnst.styleFor(style), size: .Cell)
         memeCell.layer.cornerRadius = 4
         return memeCell
     }
@@ -80,8 +81,10 @@ class MemesCollectionViewController: UIViewController, UICollectionViewDelegate,
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let fullScreenVC = storyboard.instantiateViewController(withIdentifier: "FullScreenMeme") as! FullScreenMemeController
-        let memePic = SentMemes.shared.memesList[indexPath.row].memeImage
-        fullScreenVC.memeToDisplay = memePic
+        let memePic = SentMemes.shared.memesList[indexPath.row].memeImage!
+        let memeID = SentMemes.shared.memesList[indexPath.row].uniqueID!
+        fullScreenVC.memeToDisplay = UIImage(data: memePic as Data)!
+        fullScreenVC.memeUniqueID = memeID
         tabBarController?.tabBar.isHidden = true
         navigationController!.pushViewController(fullScreenVC, animated: true)
     }

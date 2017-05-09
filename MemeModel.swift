@@ -7,24 +7,83 @@
 //
 
 import UIKit
+import CoreData
 
-//The meme object to be instantiated when saving a meme.........................................................
-struct Meme {
-    let upperEntry: String
-    let lowerEntry: String
-    let originalImage: UIImage
-    let memeImage: UIImage
-    let memeStyle: Styles
-}
 
 //Singleton Object for sharing model globally across MVC's......................................................
 class SentMemes{
-    var memesList = [Meme]()
+    var memesList = [SavedMeme]()
+    var mngdObjContext: NSManagedObjectContext!{
+        get{return  (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext}
+    }
+    
+    
     static let shared = SentMemes()
     private init(){}
     //Possible idea for clearing out sent memes if needed.
-    class func clearMemes(){SentMemes.shared.memesList = [Meme]()}
+    class func clearMemes(){shared.memesList = [SavedMeme]()}
+    
+    class func loadFromDB(){
+        let requestForMemes: NSFetchRequest<SavedMeme> = SavedMeme.fetchRequest()
+        do{shared.memesList = try shared.mngdObjContext.fetch(requestForMemes)}
+        catch{print("Data Base wan't able to produce the requested memes: \(error.localizedDescription)")}
+    }
+    
+    class func deleteMemeFromDB(objectID: String){
+        let requestMemeToDelete: NSFetchRequest<SavedMeme> = SavedMeme.fetchRequest()
+        //Search criteia should bring the one meme that has the Unique ID
+        let searchCriteria = NSPredicate(format: "uniqueID = %@", objectID)
+        requestMemeToDelete.predicate = searchCriteria
+        var memeToDelete: SavedMeme! = nil
+        do{memeToDelete = try shared.mngdObjContext.fetch(requestMemeToDelete).first}
+        catch{print("Data Base wan't able to produce the requested memes: \(error.localizedDescription)")}
+        
+        if let aMemeToDelete = memeToDelete{
+            shared.mngdObjContext.delete(aMemeToDelete)
+            print("A meme with ID \(objectID) has been deleted")
+            //Once it's deleted we need to save the context!
+            do{try shared.mngdObjContext.save()}
+            catch{print("Unable to save: \(error.localizedDescription)")}
+        }
+    }
+    
 }
+
+
+struct MemeCnst{
+    static let styleMeme = "Meme"
+    static let styleSchooled = "Schooled"
+    static let styleIndustrial = "Industrial"
+    static let styleTypewriter = "Typewriter"
+    static let styleHandwritten = "Handwritten"
+    static let styleLoveLetter = "Love Letter"
+    
+    static func styleFor(_ constant: String)->Styles{
+        switch constant{
+        case styleMeme: return .Meme
+        case styleSchooled: return .Schooled
+        case styleIndustrial: return .Industrial
+        case styleTypewriter: return .Typewriter
+        case styleHandwritten: return .Handwritten
+        case styleLoveLetter: return .LoveLetter
+        default: return .Meme
+        }
+    }
+    
+    static func constantFor(_ style: Styles)-> String{
+        switch style{
+        case .Meme : return styleMeme
+        case .Schooled : return styleSchooled
+        case .Industrial : return styleIndustrial
+        case .Typewriter : return styleTypewriter
+        case .Handwritten : return styleHandwritten
+        case .LoveLetter : return styleLoveLetter
+        default: return styleMeme
+        }
+    }
+    
+}
+
 
 //Helper enums to act as flags within configuration Methods.....................................................
 enum Styles: Int{ case Meme, Schooled, Industrial, Typewriter, Notes, Handwritten, LoveLetter}
