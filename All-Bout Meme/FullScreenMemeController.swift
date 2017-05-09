@@ -12,6 +12,7 @@ class FullScreenMemeController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var fullScreenImage: UIImageView!
     @IBOutlet weak var fullScreenScroll: UIScrollView!
     var memeToDisplay: UIImage = UIImage()
+    var memeUniqueID: String!
     
     //Sets up the View for a Scrollable/Zoomable FullScreen View of Selected Meme
     override func viewDidLoad() {super.viewDidLoad()
@@ -23,5 +24,9 @@ class FullScreenMemeController: UIViewController, UIScrollViewDelegate {
     
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return fullScreenImage
+    }
+    
+    func deleteMeme(){
+        
     }
 }

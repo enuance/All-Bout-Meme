@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class MemesTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
     @IBOutlet weak var makeMemeMessage: UILabel!
@@ -30,16 +31,23 @@ class MemesTableViewController: UIViewController, UITableViewDelegate, UITableVi
     
     //Formats all the memes to be viewed in the collection.
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        
         let image = SentMemes.shared.memesList[indexPath.row].originalImage
         let topText = SentMemes.shared.memesList[indexPath.row].upperEntry
         let bottomText = SentMemes.shared.memesList[indexPath.row].lowerEntry
         let style = SentMemes.shared.memesList[indexPath.row].memeStyle
+        
+        
         let memeCell = tableView.dequeueReusableCell(withIdentifier: "MemesTableCell", for: indexPath) as! MemesTableCell
         memeCell.tableMemeImage.image = image
         memeCell.tableMemeTopEntry.text = topText
-        memeCell.tableMemeTopEntry.font = cellDesign.fontForStyle(style, size: .Big)
+//.....................................................................................................
+//                                      Changes Made Here!!!
+//.....................................................................................................
+        memeCell.tableMemeTopEntry.font = cellDesign.fontForStyle(MemeCnst.styleFor(style), size: .Big)
         memeCell.tableMemeBottomEntry.text = bottomText
-        memeCell.tableMemeBottomEntry.font = cellDesign.fontForStyle(style, size: .Big)
+        memeCell.tableMemeBottomEntry.font = cellDesign.fontForStyle(MemeCnst.styleFor(style), size: .Big)
         memeCell.tableMemeImage.layer.cornerRadius = 4
         return memeCell
     }
@@ -49,7 +57,12 @@ class MemesTableViewController: UIViewController, UITableViewDelegate, UITableVi
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let fullScreenVC = storyboard.instantiateViewController(withIdentifier: "FullScreenMeme") as! FullScreenMemeController
         let memePic = SentMemes.shared.memesList[indexPath.row].memeImage
+//.....................................................................................................
+//                                      Changes Made Here!!!
+//.....................................................................................................
+        let memeUniqueID = SentMemes.shared.memesList[indexPath.row].memeID
         fullScreenVC.memeToDisplay = memePic
+        fullScreenVC.memeUniqueID = memeUniqueID
         tabBarController?.tabBar.isHidden = true
         navigationController!.pushViewController(fullScreenVC, animated: true)
     }

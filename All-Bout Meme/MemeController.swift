@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class MemeController: UIViewController,UIImagePickerControllerDelegate, UINavigationControllerDelegate , UITextFieldDelegate,  StyleSelectionDelegate{
     
@@ -21,6 +22,9 @@ class MemeController: UIViewController,UIImagePickerControllerDelegate, UINaviga
     var textDistanceMoved: CGFloat = 0
     var memeStyleUsed: Styles!
     let allBoutMeme = MemeStyle()
+    
+    var makeUniqueID: String{get{return UUID().uuidString}}
+    
     
     //Initial Set-Up and Delegation Assignement Section.......................................
     //Delegate assignment and Initial Values
@@ -110,7 +114,21 @@ class MemeController: UIViewController,UIImagePickerControllerDelegate, UINaviga
     
     //Saves the current meme as a Meme object and stores it in an global array
     func saveMeme(memedImage: UIImage){
-        let meme = Meme(upperEntry: topEntry.text! , lowerEntry: bottomEntry.text! , originalImage: memePicture.image! , memeImage: memedImage, memeStyle: memeStyleUsed)
+        
+//.....................................................................................................
+//                                      Changes Made Here!!!
+//.....................................................................................................
+
+        let meme = Meme(
+            upperEntry: topEntry.text! ,
+            lowerEntry: bottomEntry.text! ,
+            originalImage: memePicture.image! ,
+            memeImage: memedImage,
+            memeStyle: MemeCnst.constantFor(memeStyleUsed),
+            memeID: makeUniqueID
+        )
+        
+        
         //Send instance of meme to singleton object property memesList
         SentMemes.shared.memesList.append(meme)
     }

@@ -38,6 +38,7 @@ class MemesCollectionViewController: UIViewController, UICollectionViewDelegate,
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
         layoutSetter(checkBeforeTransition: true, size)
     }
     
@@ -46,7 +47,7 @@ class MemesCollectionViewController: UIViewController, UICollectionViewDelegate,
     }
     
     //Sets the initial/default appearance of the CollectionView
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {super.viewWillAppear(animated)
         layoutSetter(checkBeforeTransition: false, nil)
         if SentMemes.shared.memesList.count != 0 {
             makeMemeMessage.alpha = 0
@@ -62,16 +63,21 @@ class MemesCollectionViewController: UIViewController, UICollectionViewDelegate,
     
     //Formats all the memes to be viewed in the collection.
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
         let image = SentMemes.shared.memesList[indexPath.row].originalImage
         let topText = SentMemes.shared.memesList[indexPath.row].upperEntry
         let bottomText = SentMemes.shared.memesList[indexPath.row].lowerEntry
         let style = SentMemes.shared.memesList[indexPath.row].memeStyle
+        
         let memeCell = collectionView.dequeueReusableCell(withReuseIdentifier: "MemesCollectionCell", for: indexPath) as! MemesCollectionCell
         memeCell.cellImage.image = image
         memeCell.topCellEntry.text = topText
-        memeCell.topCellEntry.font = cellDesign.fontForStyle(style, size: .Cell)
+//.....................................................................................................
+//                                      Changes Made Here!!!
+//.....................................................................................................
+        memeCell.topCellEntry.font = cellDesign.fontForStyle(MemeCnst.styleFor(style), size: .Cell)
         memeCell.bottomCellEntry.text = bottomText
-        memeCell.bottomCellEntry.font = cellDesign.fontForStyle(style, size: .Cell)
+        memeCell.bottomCellEntry.font = cellDesign.fontForStyle(MemeCnst.styleFor(style), size: .Cell)
         memeCell.layer.cornerRadius = 4
         return memeCell
     }

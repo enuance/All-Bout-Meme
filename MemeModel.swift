@@ -14,7 +14,8 @@ struct Meme {
     let lowerEntry: String
     let originalImage: UIImage
     let memeImage: UIImage
-    let memeStyle: Styles
+    let memeStyle: String
+    let memeID: String
 }
 
 //Singleton Object for sharing model globally across MVC's......................................................
@@ -25,6 +26,42 @@ class SentMemes{
     //Possible idea for clearing out sent memes if needed.
     class func clearMemes(){SentMemes.shared.memesList = [Meme]()}
 }
+
+
+struct MemeCnst{
+    static let styleMeme = "Meme"
+    static let styleSchooled = "Schooled"
+    static let styleIndustrial = "Industrial"
+    static let styleTypewriter = "Typewriter"
+    static let styleHandwritten = "Handwritten"
+    static let styleLoveLetter = "Love Letter"
+    
+    static func styleFor(_ constant: String)->Styles{
+        switch constant{
+        case styleMeme: return .Meme
+        case styleSchooled: return .Schooled
+        case styleIndustrial: return .Industrial
+        case styleTypewriter: return .Typewriter
+        case styleHandwritten: return .Handwritten
+        case styleLoveLetter: return .LoveLetter
+        default: return .Meme
+        }
+    }
+    
+    static func constantFor(_ style: Styles)-> String{
+        switch style{
+        case .Meme : return styleMeme
+        case .Schooled : return styleSchooled
+        case .Industrial : return styleIndustrial
+        case .Typewriter : return styleTypewriter
+        case .Handwritten : return styleHandwritten
+        case .LoveLetter : return styleLoveLetter
+        default: return styleMeme
+        }
+    }
+    
+}
+
 
 //Helper enums to act as flags within configuration Methods.....................................................
 enum Styles: Int{ case Meme, Schooled, Industrial, Typewriter, Notes, Handwritten, LoveLetter}
