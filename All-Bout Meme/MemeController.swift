@@ -34,6 +34,7 @@ class MemeController: UIViewController,UIImagePickerControllerDelegate, UINaviga
     
     //Set Default States for buttons and intro text
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
         subscribeToKeyboardNotifications()
         cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
         shareButton.isEnabled = (memePicture.image != nil)
