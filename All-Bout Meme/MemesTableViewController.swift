@@ -16,10 +16,9 @@ class MemesTableViewController: UIViewController, UITableViewDelegate, UITableVi
     let cellDesign = MemeStyle()
     
     //Sets the initial/default appearance of the TableView
-    override func viewWillAppear(_ animated: Bool) {
-        if SentMemes.shared.memesList.count != 0 {
-            makeMemeMessage.alpha = 0
-        }
+    override func viewWillAppear(_ animated: Bool) {super.viewWillAppear(animated)
+        SentMemes.loadFromDB()
+        if SentMemes.shared.memesList.count != 0 {makeMemeMessage.alpha = 0}
         //Reloads the TableView's data each time it's brought up to Screen.
         memeTableView.reloadData()
         tabBarController?.tabBar.isHidden = false
@@ -33,18 +32,15 @@ class MemesTableViewController: UIViewController, UITableViewDelegate, UITableVi
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         
-        let image = SentMemes.shared.memesList[indexPath.row].originalImage
-        let topText = SentMemes.shared.memesList[indexPath.row].upperEntry
-        let bottomText = SentMemes.shared.memesList[indexPath.row].lowerEntry
-        let style = SentMemes.shared.memesList[indexPath.row].memeStyle
+        let image = SentMemes.shared.memesList[indexPath.row].originalImage!
+        let topText = SentMemes.shared.memesList[indexPath.row].upperEntry!
+        let bottomText = SentMemes.shared.memesList[indexPath.row].lowerEntry!
+        let style = SentMemes.shared.memesList[indexPath.row].memeStyle!
         
         
         let memeCell = tableView.dequeueReusableCell(withIdentifier: "MemesTableCell", for: indexPath) as! MemesTableCell
-        memeCell.tableMemeImage.image = image
+        memeCell.tableMemeImage.image = UIImage(data: image as Data)
         memeCell.tableMemeTopEntry.text = topText
-//.....................................................................................................
-//                                      Changes Made Here!!!
-//.....................................................................................................
         memeCell.tableMemeTopEntry.font = cellDesign.fontForStyle(MemeCnst.styleFor(style), size: .Big)
         memeCell.tableMemeBottomEntry.text = bottomText
         memeCell.tableMemeBottomEntry.font = cellDesign.fontForStyle(MemeCnst.styleFor(style), size: .Big)
@@ -56,12 +52,9 @@ class MemesTableViewController: UIViewController, UITableViewDelegate, UITableVi
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let fullScreenVC = storyboard.instantiateViewController(withIdentifier: "FullScreenMeme") as! FullScreenMemeController
-        let memePic = SentMemes.shared.memesList[indexPath.row].memeImage
-//.....................................................................................................
-//                                      Changes Made Here!!!
-//.....................................................................................................
-        let memeUniqueID = SentMemes.shared.memesList[indexPath.row].memeID
-        fullScreenVC.memeToDisplay = memePic
+        let memePic = SentMemes.shared.memesList[indexPath.row].memeImage!
+        let memeUniqueID = SentMemes.shared.memesList[indexPath.row].uniqueID!
+        fullScreenVC.memeToDisplay = UIImage(data: memePic as Data)!
         fullScreenVC.memeUniqueID = memeUniqueID
         tabBarController?.tabBar.isHidden = true
         navigationController!.pushViewController(fullScreenVC, animated: true)

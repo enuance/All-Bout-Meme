@@ -114,23 +114,15 @@ class MemeController: UIViewController,UIImagePickerControllerDelegate, UINaviga
     
     //Saves the current meme as a Meme object and stores it in an global array
     func saveMeme(memedImage: UIImage){
-        
-//.....................................................................................................
-//                                      Changes Made Here!!!
-//.....................................................................................................
-
-        let meme = Meme(
-            upperEntry: topEntry.text! ,
-            lowerEntry: bottomEntry.text! ,
-            originalImage: memePicture.image! ,
-            memeImage: memedImage,
-            memeStyle: MemeCnst.constantFor(memeStyleUsed),
-            memeID: makeUniqueID
-        )
-        
-        
-        //Send instance of meme to singleton object property memesList
-        SentMemes.shared.memesList.append(meme)
+        let aMeme = SavedMeme(context: SentMemes.shared.mngdObjContext)
+        aMeme.upperEntry = topEntry.text!
+        aMeme.lowerEntry = bottomEntry.text!
+        aMeme.originalImage = NSData(data: UIImagePNGRepresentation(memePicture.image!)!)
+        aMeme.memeImage = NSData(data: UIImagePNGRepresentation(memedImage)!)
+        aMeme.memeStyle = MemeCnst.constantFor(memeStyleUsed)
+        aMeme.uniqueID = makeUniqueID
+        do{try SentMemes.shared.mngdObjContext.save()}
+        catch{print("Meme was not able to be saved. Error info \(error.localizedDescription)")}
     }
     
     //Select an image to edit in the meme editor using either album or camera

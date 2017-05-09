@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16E195" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <elements/>
+    <entity name="SavedMeme" representedClassName="SavedMeme" syncable="YES" codeGenerationType="class">
+        <attribute name="lowerEntry" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="memeImage" attributeType="Binary" syncable="YES"/>
+        <attribute name="memeStyle" attributeType="String" syncable="YES"/>
+        <attribute name="originalImage" attributeType="Binary" syncable="YES"/>
+        <attribute name="uniqueID" attributeType="String" syncable="YES"/>
+        <attribute name="upperEntry" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="SavedMeme" positionX="-63" positionY="-18" width="128" height="135"/>
+    </elements>
 </model>
